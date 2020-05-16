@@ -1,6 +1,7 @@
 package com.example.myfavouriteplaces;
 
 import android.content.Intent;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -18,11 +19,16 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback,
-    OnInfoWindowClickListener {
-
+    OnInfoWindowClickListener, Serializable {
+  private static final String LOG_TAG = MapsActivity.class.getSimpleName();
+  public static final String EXTRA_MARKERS = "com.example.android.myfavouriteplaces.extra.MARKERS";
   private GoogleMap mMap;
+  private List<MarkerOptions> markers = new ArrayList<>();
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -38,35 +44,40 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
   /**
    * Manipulates the map once available. This callback is triggered when the map is ready to be
-   * used. This is where we can add markers or lines, add listeners or move the camera. If Google Play services is not installed on
-   * the device, the user will be prompted to install it inside the SupportMapFragment. This method
-   * will only be triggered once the user has installed Google Play services and returned to the
-   * app.
+   * used. This is where we can add markers or lines, add listeners or move the camera. If Google
+   * Play services is not installed on the device, the user will be prompted to install it inside
+   * the SupportMapFragment. This method will only be triggered once the user has installed Google
+   * Play services and returned to the app.
    */
   @Override
   public void onMapReady(GoogleMap googleMap) {
     mMap = googleMap;
 
-//    Onclicklistener to add new favourite locations
+//    OnClickListener to add new favourite locations
     mMap.setOnMapClickListener(new OnMapClickListener() {
       @Override
       public void onMapClick(LatLng latLng) {
-        mMap.addMarker(new MarkerOptions().position(latLng).title("New location"));
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,10.0f));
+        MarkerOptions marker = new MarkerOptions().position(latLng).title("New location");
+        mMap.addMarker(marker);
+        markers.add(marker);
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10.0f));
+        Log.d(LOG_TAG,"New marker added");
       }
     });
     mMap.setOnInfoWindowClickListener(this);
 
-
-    // Add a marker in Sydney and move the camera
-    LatLng sydney = new LatLng(-34, 151);
-    mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-    mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+    // Add a marker in Tallinn, Estonia and move the camera
+    LatLng tallinn = new LatLng(59.436962, 24.753574);
+    MarkerOptions marker = new MarkerOptions().position(tallinn).title("Tallinn");
+    mMap.addMarker(marker);
+//    Tallinn is intentionally one of the favourite places by default
+    markers.add(marker);
+    mMap.moveCamera(CameraUpdateFactory.newLatLng(tallinn));
   }
 
   @Override
   public void onInfoWindowClick(Marker marker) {
-    Toast.makeText(this,"Info!",Toast.LENGTH_SHORT).show();
+    Toast.makeText(this, "Info!", Toast.LENGTH_SHORT).show();
   }
 
   @Override
@@ -86,7 +97,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 ////        startActivity(intent);
 ////        return true;
       case R.id.menu_favourites:
+        Log.d(LOG_TAG,"Clicked on favourites");
         displayToast(getString(R.string.menu_favourites));
+        Intent intent = new Intent(MapsActivity.this, FavouritesActivity.class);
+        intent.putExtra(EXTRA_MARKERS, (Serializable) markers);
+        startActivity(intent);
         return true;
       case R.id.menu_about:
         displayToast(getString(R.string.menu_about));
@@ -96,6 +111,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
     return super.onOptionsItemSelected(item);
   }
+
   public void displayToast(String message) {
     Toast.makeText(getApplicationContext(), message,
         Toast.LENGTH_SHORT).show();
