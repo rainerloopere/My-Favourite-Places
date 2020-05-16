@@ -1,6 +1,11 @@
 package com.example.myfavouriteplaces;
 
+import android.content.Intent;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.Toast;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentActivity;
 import android.os.Bundle;
 
@@ -14,7 +19,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,
+public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback,
     OnInfoWindowClickListener {
 
   private GoogleMap mMap;
@@ -62,5 +67,37 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
   @Override
   public void onInfoWindowClick(Marker marker) {
     Toast.makeText(this,"Info!",Toast.LENGTH_SHORT).show();
+  }
+
+  @Override
+  // Inflate the menu; this adds items to the action bar if it is present.
+  public boolean onCreateOptionsMenu(Menu menu) {
+    MenuInflater inflater = getMenuInflater();
+    inflater.inflate(R.menu.menu_options, menu);
+    return true;
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    switch (item.getItemId()) {
+//      case R.id.action_order:
+////        Intent intent = new Intent(MainActivity.this, OrderActivity.class);
+////        intent.putExtra(EXTRA_MESSAGE, mOrderMessage);
+////        startActivity(intent);
+////        return true;
+      case R.id.menu_favourites:
+        displayToast(getString(R.string.menu_favourites));
+        return true;
+      case R.id.menu_about:
+        displayToast(getString(R.string.menu_about));
+        return true;
+      default:
+        // Do nothing
+    }
+    return super.onOptionsItemSelected(item);
+  }
+  public void displayToast(String message) {
+    Toast.makeText(getApplicationContext(), message,
+        Toast.LENGTH_SHORT).show();
   }
 }
