@@ -5,7 +5,9 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentActivity;
 import android.os.Bundle;
@@ -25,8 +27,13 @@ import java.util.List;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback,
     OnInfoWindowClickListener, Serializable {
+
   private static final String LOG_TAG = MapsActivity.class.getSimpleName();
   public static final String EXTRA_MARKERS = "com.example.android.myfavouriteplaces.extra.MARKERS";
+  public static final String EXTRA_TITLE = "com.example.android.myfavouriteplaces.extra.TITLE";
+  public static final String EXTRA_DESCRIPTION = "com.example.android.myfavouriteplaces.extra.DESCRIPTION";
+  private static final int MARKER_REQUEST = 1;
+
   private GoogleMap mMap;
   private List<MarkerOptions> markers = new ArrayList<>();
 
@@ -39,6 +46,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
         .findFragmentById(R.id.map);
     mapFragment.getMapAsync(this);
+
+//    Restoring markers if activty was destroyed previously
+    if (savedInstanceState != null) {
+      markers = (List<MarkerOptions>) savedInstanceState.getSerializable(EXTRA_MARKERS);
+    }
   }
 
 
@@ -57,22 +69,34 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     mMap.setOnMapClickListener(new OnMapClickListener() {
       @Override
       public void onMapClick(LatLng latLng) {
-        MarkerOptions marker = new MarkerOptions().position(latLng).title("New location");
-        mMap.addMarker(marker);
-        markers.add(marker);
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10.0f));
-        Log.d(LOG_TAG,"New marker added");
+        Intent intent = new Intent(MapsActivity.this, NewMarkerActivity.class);
+        MarkerOptions marker = new MarkerOptions().position(latLng);
+        intent.putExtra("MARKER", marker);
+        startActivityForResult(intent, MARKER_REQUEST);
+
+//        MarkerOptions marker = new MarkerOptions().position(latLng);
+//        mMap.addMarker(marker);
+//        markers.add(marker);
+//        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10.0f));
+//        Log.d(LOG_TAG, "New marker added");
       }
     });
     mMap.setOnInfoWindowClickListener(this);
 
-    // Add a marker in Tallinn, Estonia and move the camera
-    LatLng tallinn = new LatLng(59.436962, 24.753574);
-    MarkerOptions marker = new MarkerOptions().position(tallinn).title("Tallinn");
-    mMap.addMarker(marker);
-//    Tallinn is intentionally one of the favourite places by default
-    markers.add(marker);
-    mMap.moveCamera(CameraUpdateFactory.newLatLng(tallinn));
+//    Markers array is not empty if it is restored from the state after destroying previous activity
+    if (markers.isEmpty()) {
+      // Add a marker in Tallinn, Estonia and move the camera
+      LatLng tallinn = new LatLng(59.436962, 24.753574);
+      MarkerOptions marker = new MarkerOptions().position(tallinn).title("Tallinn");
+      mMap.addMarker(marker);
+      // Tallinn is intentionally one of the favourite places by default
+      markers.add(marker);
+      mMap.moveCamera(CameraUpdateFactory.newLatLng(tallinn));
+    } else {
+      for (MarkerOptions marker : markers) {
+        mMap.addMarker(marker);
+      }
+    }
   }
 
   @Override
@@ -97,7 +121,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 ////        startActivity(intent);
 ////        return true;
       case R.id.menu_favourites:
-        Log.d(LOG_TAG,"Clicked on favourites");
+        Log.d(LOG_TAG, "Clicked on favourites");
         displayToast(getString(R.string.menu_favourites));
         Intent intent = new Intent(MapsActivity.this, FavouritesActivity.class);
         intent.putExtra(EXTRA_MARKERS, (Serializable) markers);
@@ -115,5 +139,29 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
   public void displayToast(String message) {
     Toast.makeText(getApplicationContext(), message,
         Toast.LENGTH_SHORT).show();
+  }
+
+  @Override
+  public void onActivityResult(int requestCode,
+      int resultCode, Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
+    Log.d(LOG_TAG, "Result received");
+    if (requestCode == MARKER_REQUEST) {
+      if (resultCode == RESULT_OK) {
+        MarkerOptions marker = data.getParcelableExtra("MARKER");
+        mMap.addMarker(marker);
+        markers.add(marker);
+//        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(marker.get, 10.0f));
+      }
+    }
+  }
+
+  //  Saving the markers if activity is destroyed
+  @Override
+  protected void onSaveInstanceState(@NonNull Bundle outState) {
+    super.onSaveInstanceState(outState);
+    if (markers.size() > 1) {
+      outState.putSerializable(EXTRA_MARKERS, (Serializable) markers);
+    }
   }
 }

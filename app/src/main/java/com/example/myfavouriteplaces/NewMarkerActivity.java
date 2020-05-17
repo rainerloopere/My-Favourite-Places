@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import java.util.List;
 
@@ -20,6 +21,9 @@ public class NewMarkerActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_new_marker);
 
+    Intent intent = getIntent();
+    final MarkerOptions replyMarker = intent.getParcelableExtra("MARKER");
+
     final EditText input_title = findViewById(R.id.input_title);
     final EditText input_description = findViewById(R.id.input_description);
 
@@ -30,8 +34,11 @@ public class NewMarkerActivity extends AppCompatActivity {
         String title = input_title.getText().toString();
         String description = input_description.getText().toString();
 
+        replyMarker.title(title);
+        replyMarker.snippet(description);
+
         Intent replyIntent = new Intent();
-        replyIntent.putExtra(MapsActivity.EXTRA_TITLE, title);
+        replyIntent.putExtra("MARKER", replyMarker);
         setResult(RESULT_OK,replyIntent);
         Log.d(LOG_TAG, "End activity");
         finish();
