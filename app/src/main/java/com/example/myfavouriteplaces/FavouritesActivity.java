@@ -3,9 +3,9 @@ package com.example.myfavouriteplaces;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.TextView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import androidx.appcompat.app.AppCompatActivity;
-import com.google.android.gms.maps.model.MarkerOptions;
 import java.util.List;
 
 public class FavouritesActivity extends AppCompatActivity {
@@ -15,16 +15,16 @@ public class FavouritesActivity extends AppCompatActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_favourites);
+
+//    Getting titles from the intent
     Intent intent = getIntent();
-    List<MarkerOptions> markers = (List<MarkerOptions>) intent.getSerializableExtra(MapsActivity.EXTRA_MARKERS);
+    List<String> markerTitles = intent.getStringArrayListExtra(MapsActivity.EXTRA_MARKERS);
     Log.d(LOG_TAG, "Intent loaded");
 
-    String message = "";
-    for (MarkerOptions marker : markers){
-      message += marker.getTitle() + ", ";
-    }
-    TextView textView = findViewById(R.id.textView);
-    textView.setText(message);
+//    Presenting titles in a ListView
+    ArrayAdapter<String> titlesAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, markerTitles);
+    ListView listView = findViewById(R.id.list_view);
+    listView.setAdapter(titlesAdapter);
   }
 
 }

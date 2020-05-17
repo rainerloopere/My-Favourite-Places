@@ -115,19 +115,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
     switch (item.getItemId()) {
-//      case R.id.action_order:
-////        Intent intent = new Intent(MainActivity.this, OrderActivity.class);
-////        intent.putExtra(EXTRA_MESSAGE, mOrderMessage);
-////        startActivity(intent);
-////        return true;
       case R.id.menu_favourites:
         Log.d(LOG_TAG, "Clicked on favourites");
-        displayToast(getString(R.string.menu_favourites));
         Intent intent = new Intent(MapsActivity.this, FavouritesActivity.class);
-        intent.putExtra(EXTRA_MARKERS, (Serializable) markers);
+        intent.putStringArrayListExtra(EXTRA_MARKERS, getMarkerTitles(markers));
         startActivity(intent);
         return true;
       case R.id.menu_about:
+        Log.d(LOG_TAG, "Clicked on about");
         displayToast(getString(R.string.menu_about));
         return true;
       default:
@@ -139,6 +134,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
   public void displayToast(String message) {
     Toast.makeText(getApplicationContext(), message,
         Toast.LENGTH_SHORT).show();
+  }
+
+  public ArrayList<String> getMarkerTitles(List<MarkerOptions> markers) {
+    ArrayList<String> titles = new ArrayList<>();
+    for (MarkerOptions marker : markers) {
+      titles.add(marker.getTitle());
+    }
+    return titles;
   }
 
   @Override

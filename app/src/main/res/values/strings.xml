@@ -2,7 +2,7 @@
   <string name="app_name">My Favourite Places</string>
   <string name="title_activity_maps">Map</string>
   <string name="menu_favourites">Favourite places</string>
-  <string name="menu_about">About</string>
+  <string name="menu_about">This app was created by Rainer Loopere</string>
   <string name="label_favourites">Favourites</string>
   <string name="input_label_title">Title</string>
   <string name="input_label_description">Description</string>
