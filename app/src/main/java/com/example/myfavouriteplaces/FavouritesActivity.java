@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.util.List;
 
 public class FavouritesActivity extends AppCompatActivity {
+
   private static final String LOG_TAG = FavouritesActivity.class.getSimpleName();
 
   @Override
@@ -22,7 +23,8 @@ public class FavouritesActivity extends AppCompatActivity {
     Log.d(LOG_TAG, "Intent loaded");
 
 //    Presenting titles in a ListView
-    ArrayAdapter<String> titlesAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, markerTitles);
+    ArrayAdapter<String> titlesAdapter = new ArrayAdapter<String>(this,
+        android.R.layout.simple_list_item_1, markerTitles);
     ListView listView = findViewById(R.id.list_view);
     listView.setAdapter(titlesAdapter);
   }
