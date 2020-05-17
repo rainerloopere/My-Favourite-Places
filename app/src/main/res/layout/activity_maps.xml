@@ -4,20 +4,7 @@
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="match_parent">
-
-<!--  <Button-->
-<!--    android:id="@+id/button"-->
-<!--    android:layout_width="0dp"-->
-<!--    android:layout_height="wrap_content"-->
-<!--    android:layout_marginTop="@dimen/default_margin"-->
-<!--    android:layout_marginStart="@dimen/default_margin"-->
-<!--    android:layout_marginEnd="@dimen/default_margin"-->
-<!--    android:background="@drawable/btn_default_selector"-->
-<!--    android:text="@string/button_label"-->
-<!--    map:layout_constraintEnd_toEndOf="parent"-->
-<!--    map:layout_constraintHorizontal_bias="1.0"-->
-<!--    map:layout_constraintStart_toStartOf="parent"-->
-<!--    map:layout_constraintTop_toTopOf="parent" />-->
+  
   <fragment
     android:id="@+id/map"
     android:layout_width="match_parent"

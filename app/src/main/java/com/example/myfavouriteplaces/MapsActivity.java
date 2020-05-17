@@ -5,33 +5,26 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentActivity;
 import android.os.Bundle;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMapClickListener;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback,
-    OnInfoWindowClickListener, Serializable {
+public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, Serializable {
 
   private static final String LOG_TAG = MapsActivity.class.getSimpleName();
   public static final String EXTRA_MARKERS = "com.example.android.myfavouriteplaces.extra.MARKERS";
-  public static final String EXTRA_TITLE = "com.example.android.myfavouriteplaces.extra.TITLE";
-  public static final String EXTRA_DESCRIPTION = "com.example.android.myfavouriteplaces.extra.DESCRIPTION";
   private static final int MARKER_REQUEST = 1;
 
   private GoogleMap mMap;
@@ -53,7 +46,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
   }
 
-
   /**
    * Manipulates the map once available. This callback is triggered when the map is ready to be
    * used. This is where we can add markers or lines, add listeners or move the camera. If Google
@@ -74,14 +66,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         intent.putExtra("MARKER", marker);
         startActivityForResult(intent, MARKER_REQUEST);
 
-//        MarkerOptions marker = new MarkerOptions().position(latLng);
-//        mMap.addMarker(marker);
-//        markers.add(marker);
-//        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10.0f));
-//        Log.d(LOG_TAG, "New marker added");
       }
     });
-    mMap.setOnInfoWindowClickListener(this);
 
 //    Markers array is not empty if it is restored from the state after destroying previous activity
     if (markers.isEmpty()) {
@@ -100,11 +86,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
   }
 
   @Override
-  public void onInfoWindowClick(Marker marker) {
-    Toast.makeText(this, "Info!", Toast.LENGTH_SHORT).show();
-  }
-
-  @Override
   // Inflate the menu; this adds items to the action bar if it is present.
   public boolean onCreateOptionsMenu(Menu menu) {
     MenuInflater inflater = getMenuInflater();
@@ -112,6 +93,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     return true;
   }
 
+  //  Control what happens when menu items are clicked
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
     switch (item.getItemId()) {
@@ -154,7 +136,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         MarkerOptions marker = data.getParcelableExtra("MARKER");
         mMap.addMarker(marker);
         markers.add(marker);
-//        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(marker.get, 10.0f));
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(marker.getPosition(), 10.0f));
       }
     }
   }

@@ -7,11 +7,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import java.util.List;
 
 public class NewMarkerActivity extends AppCompatActivity {
   private static final String LOG_TAG = FavouritesActivity.class.getSimpleName();
@@ -23,6 +20,7 @@ public class NewMarkerActivity extends AppCompatActivity {
 
     Intent intent = getIntent();
     final MarkerOptions replyMarker = intent.getParcelableExtra("MARKER");
+    Log.d(LOG_TAG, "Intent loaded");
 
     final EditText input_title = findViewById(R.id.input_title);
     final EditText input_description = findViewById(R.id.input_description);
@@ -37,6 +35,7 @@ public class NewMarkerActivity extends AppCompatActivity {
         replyMarker.title(title);
         replyMarker.snippet(description);
 
+//        Return a new intent with a market that has updated title and snippet
         Intent replyIntent = new Intent();
         replyIntent.putExtra("MARKER", replyMarker);
         setResult(RESULT_OK,replyIntent);
