@@ -73,7 +73,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     if (markers.isEmpty()) {
       // Add a marker in Tallinn, Estonia and move the camera
       LatLng tallinn = new LatLng(59.436962, 24.753574);
-      MarkerOptions marker = new MarkerOptions().position(tallinn).title("Tallinn");
+      MarkerOptions marker = new MarkerOptions().position(tallinn).title("Tallinn").snippet("One of top digital and best preserved medieval city in the world");
       mMap.addMarker(marker);
       // Tallinn is intentionally one of the favourite places by default
       markers.add(marker);
@@ -105,7 +105,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         return true;
       case R.id.menu_about:
         Log.d(LOG_TAG, "Clicked on about");
-        displayToast(getString(R.string.menu_about));
+        displayToast("This app was created by Rainer Loopere");
         return true;
       default:
         // Do nothing
