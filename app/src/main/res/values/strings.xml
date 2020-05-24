@@ -7,4 +7,5 @@
   <string name="input_label_title">Title</string>
   <string name="input_label_description">Description</string>
   <string name="button_label_save">Save</string>
+  <string name="new_marker_intro">Enter some information about your selected location</string>
 </resources>
